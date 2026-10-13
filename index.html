@@ -2296,11 +2296,11 @@ const KZ_TRACKS=[
    tunnel:[[6.5,7.3]],bridge:[[1.15,2.7]],arch:[4,14],hazard:[],stands:[17.4],houses:12},
   {id:'volcan',name:'Volcan Braise',emo:'🌋',theme:'volcan',w:17,
    pts:[[0,0,1],[80,-25,2],[150,-5,5],[185,45,8],[160,100,11],[100,105,13],[60,130,15],[70,185,15],[130,205,13],[185,240,10],[170,295,7],[100,315,4],[30,290,2],[-40,260,1],[-80,200,1],[-70,130,1],[-100,80,1],[-60,25,1]],
-   fall:[{a:2.5,b:5.4,side:0},{a:11.4,b:13,side:1}],rail:[[2.6,5.3]],ramps:[10.4,15.6],glide:[16.4],pads:[.5,8.2,14.5,3.9],boxes:[2,5.9,9,12,15],coins:[1.4,4.4,7.6,10.8,13.5,17.5],
+   fall:[{a:2.5,b:5.4,side:0},{a:11.4,b:13,side:1}],rail:[[2.6,5.3]],ramps:[10.4,14.0],glide:[16.4],pads:[.5,8.2,14.5,3.9],boxes:[2,5.9,9,12,15],coins:[1.4,4.4,7.6,10.8,13.5,17.5],
    tunnel:[[6.4,7.5]],bridge:[[2.6,5.3]],arch:[1,9.6,13.8],hazard:[{t:'fire',a:11.5,b:12.9},{t:'fire',a:3,b:5}],stands:[17.4],houses:0},
   {id:'neige',name:'Neige Givrée',emo:'❄️',theme:'neige',w:19,
    pts:[[0,0,0],[90,5,1],[160,-35,3],[235,-30,6],[275,25,8],[260,85,9],[205,95,8],[165,75,6],[125,105,4],[140,160,3],[120,215,2],[60,240,1],[0,215,0],[-30,165,0],[-80,185,1],[-130,150,2],[-125,85,1],[-75,40,0]],
-   fall:[{a:5.3,b:6.6,side:1},{a:9.2,b:10.2,side:0}],rail:[[9.2,10.2]],ramps:[2.6,12.6],glide:[16.3],pads:[.6,4.2,8.4,15.2],boxes:[1.8,4.8,8,11.5,14.8],coins:[2.2,5.6,8.8,11,13.6,17.3],
+   fall:[{a:5.3,b:6.6,side:1},{a:9.2,b:10.2,side:0}],rail:[[9.2,10.2]],ramps:[2.6,14.9],glide:[16.3],pads:[.6,4.2,8.4,15.2],boxes:[1.8,4.8,8,11.5,14.8],coins:[2.2,5.6,8.8,11,13.6,17.3],
    tunnel:[[13.2,14.2]],bridge:[[9.2,10.2]],arch:[1.2,7.6],hazard:[{t:'snow',a:10.8,b:12.2}],stands:[17.4],houses:10}
 ];
 const KZ_THEMES={
@@ -2487,7 +2487,7 @@ function TurboZoo(body){
       i=>{cfg.chars[pi]=i;save();if(pi===0&&cfg.players===2)pickChar(1);else if(cfg.mode==='race'||cfg.mode==='tt')pickTrack();else startEvent();},
       ()=>{if(pi===1)pickChar(0);else titleMenu();});
   }
-  function trackCard(t,i){const rec=store.get('kz-tt-'+t.id+(KZ_CC[cfg.cc].mirror?'-m':''),null);return`<div class="emo">${t.emo}</div><b>${t.name}</b><canvas width="160" height="100" data-tr="${i}"></canvas>${cfg.mode==='tt'?`<div class="kz-rec">${rec?'Record '+fmtT(rec.total):'Pas encore de record'}</div>`:''}`;}
+  function trackCard(t,i){const rec=store.get('kz-tt2-'+t.id+(KZ_CC[cfg.cc].mirror?'-m':''),null);return`<div class="emo">${t.emo}</div><b>${t.name}</b><canvas width="160" height="100" data-tr="${i}"></canvas>${cfg.mode==='tt'?`<div class="kz-rec">${rec?'Record '+fmtT(rec.total):'Pas encore de record'}</div>`:''}`;}
   function pickTrack(){
     showGrid('Choisis le circuit',cfg.mode==='tt'?'Contre-la-montre : 3 tours, 3 piments au départ. Bats ton fantôme !':'Course simple, 3 tours.',KZ_TRACKS.map(trackCard),2,cfg.track,i=>{cfg.track=i;save();startEvent();},()=>pickChar(cfg.players-1),i=>previewTrack(i));
     menu.querySelectorAll('canvas[data-tr]').forEach(c=>drawOutline(c,KZ_TRACKS[+c.dataset.tr]));
@@ -2653,8 +2653,8 @@ function TurboZoo(body){
     const shadow=new THREE.Mesh(new THREE.PlaneGeometry(2.6,3.4),new THREE.MeshBasicMaterial({map:TX.shadow,transparent:true,depthWrite:false,opacity:.75}));shadow.rotation.x=-Math.PI/2;shadow.renderOrder=1;
     // aile delta déployée sur les grands tremplins bleus
     const glider=new THREE.Group();glider.position.set(0,2.05,-.5);glider.scale.setScalar(.001);glider.visible=false;body.add(glider);
-    if(!ghost){for(const sx of[-1,1]){B(glider,rbox(2.5,.08,1.4,.035),paint,sx*1.2,.12,0,0,0,sx*-.12);B(glider,GEO.cyl,chrome,sx*.55,-.6,.1,0,0,sx*.5,.045,1.4,.045);B(glider,GEO.sph,glowW,sx*2.42,.27,-.1,0,0,0,.12);}
-      B(glider,rbox(.5,.1,1.5,.04),white,0,.02,0);}
+    if(!ghost){const gp=new THREE.Group();for(const sx of[-1,1]){B(gp,rbox(2.5,.08,1.4,.035),paint,sx*1.2,.12,0,0,0,sx*-.12);B(gp,GEO.cyl,chrome,sx*.55,-.6,.1,0,0,sx*.5,.045,1.4,.045);B(gp,GEO.sph,glowW,sx*2.42,.27,-.1,0,0,0,.12);}
+      B(gp,rbox(.5,.1,1.5,.04),white,0,.02,0);glider.add(mergeMeshes(gp));}
     const held=new THREE.Group();held.position.set(0,.55,-2.1);held.visible=false;body.add(held);
     return{g,body,wheels,front,head:headM,shadow,held,glider,exh:ex,balloons:[],kc:paint,gm};
   }
@@ -2829,7 +2829,7 @@ function TurboZoo(body){
         idx.forEach((si,n)=>{if(n%7!==3)return;const s=S[si],top=s.y-1.3,hg=top-base;if(hg<.4)return;
           for(const sd of[1,-1]){const[x,z]=offPt(s,sd*E(si)*.72);pil.push({x,y:base+hg/2,z,sx:wood?.55:1.3,sy:hg,sz:wood?.55:1.3});}
           beams.push({x:s.x,y:top-.3,z:s.z,sx:E(si)*2,sy:.6,sz:wood?.4:1,ry:Math.atan2(s.tx,s.tz)});});
-        if(T!=='volcan'&&th.liquid){const ly=T==='plage'?th.liquid.y:.1,m=strip(S,N,i=>{const a=offPt(S[i],-(E(i)+26)),b=offPt(S[i],E(i)+26);return[[a[0],ly,a[1]],[b[0],ly,b[1]]];},f,liquidMat(th,true),20);if(m)m.receiveShadow=true;}
+        if(T!=='volcan'&&th.liquid){const ly=T==='plage'?th.liquid.y:.1,fw=(i,k)=>ly===th.liquid.y&&(S[i][k]||S[(i+3)%N][k]||S[(i-3+N)%N][k]),X=(i,k)=>fw(i,k)?half(i)+CURB:E(i)+26,m=strip(S,N,i=>{const a=offPt(S[i],-X(i,'fallL')),b=offPt(S[i],X(i,'fallR'));return[[a[0],ly,a[1]],[b[0],ly,b[1]]];},f,liquidMat(th,true),20);if(m)m.receiveShadow=true;}
       }
       const pmat=std({color:col(wood?0x5a3a1e:T==='volcan'?0x2a2426:0xaab6c4),roughness:.85,metalness:wood?0:.2});
       inst(wood?GEO.cyl:rbox(1,1,1,.12),pmat,pil,true,{cell:400});inst(GEO.box,pmat,beams,true,{cell:400});
@@ -2881,7 +2881,7 @@ function TurboZoo(body){
     {const ct=tex(128,64,(g,w,h)=>{g.fillStyle=th.curb[0];g.fillRect(0,0,w,h);g.fillStyle=th.curb[1];for(let x=10;x<w;x+=40){g.beginPath();g.moveTo(x,8);g.lineTo(x+18,h/2);g.lineTo(x,h-8);g.lineTo(x+12,h-8);g.lineTo(x+30,h/2);g.lineTo(x+12,8);g.fill();}g.strokeStyle='rgba(0,0,0,.35)';g.lineWidth=4;g.strokeRect(2,2,w-4,h-4);},1,1);
      const cm=std({map:ct,emissiveMap:ct,emissive:new THREE.Color(.35,.35,.35),roughness:.5,side:THREE.DoubleSide}),boards=[],posts=[];let last=-99;
      for(let i=0;i<N;i++){const s=S[i];if(Math.abs(s.curv)<.02||s.tunnel||s.rail||i-last<5)continue;const sd=-Math.sign(s.curv),fk=sd>0?'fallR':'fallL';if(s[fk])continue;last=i;
-       const[x,z]=offPt(s,sd*(half(i)+OFF+.7));boards.push({x,y:s.y+1.9,z,sx:sd>0?-2.4:2.4,sy:1.2,sz:1,ry:Math.atan2(-sd*s.rx,-sd*s.rz)});posts.push({x,y:s.y+.65,z,sx:.08,sy:1.3,sz:.08});}
+       const[x,z]=offPt(s,sd*(half(i)+OFF+.7));boards.push({x,y:s.y+1.9,z,sx:2.4,sy:1.2,sz:1,ry:Math.atan2(s.rx,s.rz)});posts.push({x,y:s.y+.65,z,sx:.08,sy:1.3,sz:.08});}
      inst(GEO.plane,cm,boards,true);inst(GEO.cyl,W({color:col(0x9aa0a8),metalness:.6,roughness:.4}),posts,false);}
     // drapeaux autour du départ
     {const fl=[],poles=[];
@@ -2964,7 +2964,7 @@ function TurboZoo(body){
           if(!h.hit){h.hit=true;
             for(let i=0;i<20;i++)particle(h.x,h.y+.8,h.z,rnd(-9,9),rnd(5,15),rnd(-9,9),i%2?0xff7a1a:0xffd23b,rnd(.5,.9),rnd(.6,1.2),3,{g:18,grow:.3});
             for(let i=0;i<8;i++)particle(h.x+rnd(-1.5,1.5),h.y+.6,h.z+rnd(-1.5,1.5),rnd(-2,2),rnd(1,4),rnd(-2,2),0x3a2a26,1.4,2.2,0,{g:-1,grow:2.6,drag:1,a:.65});
-            let heard=false;for(const k of humans){const d=Math.hypot(k.x-h.x,k.z-h.z);if(d<45){k.cam.shake=Math.max(k.cam.shake||0,.55*(1-d/45));heard=true;}}if(heard)SFX.thud();
+            let heard=false;if(state!=='results')for(const k of humans){const d=Math.hypot(k.x-h.x,k.z-h.z);if(d<45){k.cam.shake=Math.max(k.cam.shake||0,.55*(1-d/45));heard=true;}}if(heard)SFX.thud();
             if(live)for(const k of karts)if(!k.out&&k.fallT<=0&&Math.hypot(k.x-h.x,k.z-h.z)<3.6&&Math.abs(k.y-h.y)<3)hit(k,'tumble');}}}
       else{const s=world.S[h.si],L0=s.w/2+OFF+5,sp=11,T2=2*L0/sp,cyc=T2+1.1;h.ph+=dt;const t=h.ph%cyc;if(t<h.lt)h.dir=-h.dir;h.lt=t;
         if(t<T2){const lat=h.dir*(-L0+sp*t);h.x=s.x+s.rx*lat;h.z=s.z+s.rz*lat;h.y=s.y+2.2;h.ball.visible=true;h.ball.position.set(h.x,h.y,h.z);h.ball.rotation.set(0,Math.atan2(s.tx,s.tz),h.dir*sp*t/2.2);
@@ -3196,7 +3196,8 @@ function TurboZoo(body){
     if(Math.abs(err)>1.3&&k.speed>14){inp.thr=0;}
     const far=S[(k.si+look*2)%N],ahead=angDiff(Math.atan2(far.x-k.x,far.z-k.z),k.yaw);
     const A=k.ai;
-    if(A.dHold){if(k.drift){if(Math.abs(ahead)<.16||k.tier>=A.tierGoal&&Math.abs(ahead)<.3)A.dHold=false;}else if((A.dT+=dt)>.9)A.dHold=false;}
+    const tl=angDiff(Math.atan2(far.tx,far.tz),Math.atan2(S[k.si].tx,S[k.si].tz));
+    if(A.dHold){if(k.drift){if(Math.abs(tl)<.1||ahead*A.dDir>.3||Math.abs(k.lat)>S[k.si].w/2-1||k.tier>=A.tierGoal&&Math.abs(ahead)<.3)A.dHold=false;}else if((A.dT+=dt)>.9)A.dHold=false;}
     else if(Math.abs(ahead)>.4&&k.speed>17&&!k.air&&Math.random()<dt*4){A.dHold=true;A.dT=0;A.dDir=-Math.sign(ahead);}
     inp.drift=!!A.dHold;if(A.dHold&&!k.drift)inp.steer=A.dDir;
     // figure en l'air après un tremplin
@@ -3271,7 +3272,7 @@ function TurboZoo(body){
   function boost(k,t,snd){k.boostT=Math.max(k.boostT,t);k.speed=Math.max(k.speed,vmaxOf(k)*1.12);if(snd!==false&&k.human>=0)SFX.boost();}
   function hit(k,type,quiet){
     if(k.invT>0||k.starT>0||k.out)return false;
-    k.hitType=type;k.hitT=type==='spin'?.95:type==='tumble'?1.35:1.8;k.invT=k.hitT+.7;k.drift=0;k.charge=0;k.tier=0;k.boostT=0;
+    k.hitType=type;k.hitT=type==='spin'?.95:type==='tumble'?1.35:1.8;k.invT=k.hitT+.7;k.drift=0;k.charge=0;k.tier=0;k.boostT=0;k.trick=false;k.trickT=0;k.glide=false;
     k.speed*=type==='spin'?.35:.08;if(type==='blast')k.vy=11;if(type==='tumble')k.vy=5;
     if(!world.arena)k.coins=Math.max(0,k.coins-(type==='spin'?2:3));
     if(k.holding){k.holding=false;k.item=null;setHeld(k);}
@@ -3606,7 +3607,7 @@ function TurboZoo(body){
     projs=[];raceT=-4;countT=4;introT=mode==='battle'?1.5:3.2;state='intro';eclairT=-99;
     // fantôme du contre-la-montre
     ghostRec=null;ghostPlay=null;ghostMesh=null;
-    if(mode==='tt'){const rec=store.get('kz-tt-'+KZ_TRACKS[ev.cup[0]].id+(KZ_CC[cfg.cc].mirror?'-m':''),null);ghostRec={pts:[],done:false};
+    if(mode==='tt'){const rec=store.get('kz-tt2-'+KZ_TRACKS[ev.cup[0]].id+(KZ_CC[cfg.cc].mirror?'-m':''),null);ghostRec={pts:[],done:false};
       if(rec&&rec.g){ghostPlay=rec.g;const gm=kartModel(KZ_CHARS[rec.ci||0],true);ghostMesh=gm.g;scene.add(ghostMesh);}}
     hudsEl.hidden=false;makeHuds();startEngines();startMusic(world.th);
     for(const k of humans)k.cam.init=false;
@@ -3625,7 +3626,7 @@ function TurboZoo(body){
     rankKarts();
     const res=[...karts].sort((a,b)=>a.rank-b.rank);
     if(ev.mode==='tt'){
-      const k=humans[0],tr=KZ_TRACKS[ev.cup[0]],key='kz-tt-'+tr.id+(KZ_CC[cfg.cc].mirror?'-m':''),old=store.get(key,null),total=k.finT,best=Math.min(...k.lapTimes);
+      const k=humans[0],tr=KZ_TRACKS[ev.cup[0]],key='kz-tt2-'+tr.id+(KZ_CC[cfg.cc].mirror?'-m':''),old=store.get(key,null),total=k.finT,best=Math.min(...k.lapTimes);
       const isRec=k.finished&&(!old||total<old.total);
       if(isRec)store.set(key,{total,lap:best,ci:k.ci,g:ghostRec.pts});
       showMenu(isRec?'Nouveau record !':'Contre-la-montre',`${tr.name} · temps ${k.finished?fmtT(total):'—'} · meilleur tour ${isFinite(best)?fmtT(best):'—'}${old?' · record précédent '+fmtT(old.total):''}`,[
